@@ -1,0 +1,6 @@
+nvm install lts/krypton
+nvm alias defaul let/krypton
+npm init
+npm install next
+npm install react
+npm install react-dom

@@ -4,3 +4,4 @@ npm init
 npm install next
 npm install react
 npm install react-dom
+git config --global core.editor "cursor --wait" #good by vim

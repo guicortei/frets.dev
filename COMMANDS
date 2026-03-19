@@ -5,3 +5,5 @@ npm install next
 npm install react
 npm install react-dom
 git config --global core.editor "cursor --wait" #good by vim
+### instalar plugin editorconfig no editor de código
+### configurar arquivo .editorconfig 

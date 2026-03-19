@@ -6,4 +6,9 @@ npm install react
 npm install react-dom
 git config --global core.editor "cursor --wait" #good by vim
 ### instalar plugin editorconfig no editor de código
-### configurar arquivo .editorconfig 
+### configurar arquivo .editorconfig
+npm install prettier -D 
+### instalar plugin prettier no editor de código
+### configurar editor: definir como formatter padrão o próprio prettier
+### configurar editor: ligar o "format on save"
+### configurar editor: desligar o "autosave"

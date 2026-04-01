@@ -13,3 +13,4 @@ npm install prettier -D
 ### configurar editor: ligar o "format on save"
 ### configurar editor: desligar o "autosave"
 ### definir organização de pastas: pages, tests, infra, models
+npm install --save-dev jest

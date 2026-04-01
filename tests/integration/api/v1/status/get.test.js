@@ -1,4 +1,4 @@
-import { query } from "../../../../../infra/database.js";
+import { query } from "infra/database.js";
 
 test("GET to /api/v1/status should return 200", async () => {
   const result = await query("SELECT 1");

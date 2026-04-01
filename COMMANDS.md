@@ -59,6 +59,39 @@ Convenção esperada: `pages`, `tests`, `infra`, `models` (e o que mais o projet
 
 ---
 
+## Arquivos de configuração na raiz
+
+Trechos do que cada arquivo faz neste repositório (todos ficam na pasta do projeto, salvo indicação em contrário).
+
+### `.nvmrc`
+
+Indica **qual versão do Node** o projeto espera (aqui: `lts/krypton`). Com o nvm instalado, em cada clone você pode rodar `nvm install` e `nvm use` na raiz para alinhar com o time e com o CI.
+
+### `jsconfig.json`
+
+Configuração do **JavaScript no editor** (e de ferramentas que a respeitam): neste repo define `baseUrl: "."` para imports a partir da raiz. É o lugar onde, se quiser, se adicionam **`paths`** (por exemplo `@/*`) para atalhos de import — o Next costuma documentar isso junto com o alias `@/`.
+
+### `vitest.config.mjs`
+
+Configura o **Vitest** (testes): padrão de arquivos `tests/**/*.test.js`, ambiente Node, timeout, dependência `pg` tratada no bundler de testes, e carregamento de variáveis de ambiente com `loadEnv("development", …)`. Por isso os testes usam o **mesmo modo “development”** que o Vite/Next associam ao desenvolvimento local — incluindo o arquivo **`.env.development`** (além de `.env` e `.env.local`, conforme a [ordem do Vite](https://vitejs.dev/guide/env-and-mode.html)).
+
+### `.editorconfig`
+
+Define regras **mínimas e neutras ao editor** (aqui: indentação com espaços, tamanho 2). Quem instala a extensão EditorConfig passa a respeitar isso automaticamente, reduzindo diffs só por estilo.
+
+### `.env.development`
+
+Arquivo de variáveis para o modo **`development`**. O sufixo **`.development`** existe porque ferramentas como **Next.js** e **Vite** carregam, em desenvolvimento, arquivos específicos desse modo (`.env.development`, `.env.development.local`) em vez de misturar tudo com produção.
+
+Neste projeto, o mesmo conjunto de valores usado no app em dev também é referenciado por:
+
+- **`infra/compose.yaml`** — o serviço Postgres usa `env_file: ../.env.development`, ou seja, as credenciais/porta do container vêm desse arquivo na raiz.
+- **`vitest.config.mjs`** — `loadEnv("development", …)` faz o Vitest injetar no processo de teste as variáveis desse modo (incluindo `.env.development`), alinhando testes de integração que usam `infra/database.js` com o que você usa no dia a dia.
+
+**Boas práticas:** não commite segredos reais; use `.env.example` como modelo e mantenha arquivos sensíveis fora do Git se necessário. Em CI, prefira **secrets** e `env:` no workflow em vez de depender de um `.env` no repositório.
+
+---
+
 ## Docker (Postgres)
 
 Sobe o banco (e o que mais estiver no compose) com a mesma configuração em qualquer máquina; o segundo comando roda em background e força recriação dos containers quando você mudar a definição.

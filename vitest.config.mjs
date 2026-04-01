@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { loadEnv } from "vite";
 
 export default defineConfig({
   test: {
@@ -8,6 +9,7 @@ export default defineConfig({
     testTimeout: 30_000,
     hookTimeout: 30_000,
     pool: "forks",
+    env: loadEnv("test", process.cwd(), ""),
     server: {
       deps: {
         inline: ["pg"],

@@ -13,4 +13,9 @@ npm install prettier -D
 ### configurar editor: ligar o "format on save"
 ### configurar editor: desligar o "autosave"
 ### definir organização de pastas: pages, tests, infra, models
-npm install --save-dev jest
+npm install --save-dev vitest
+### criar arquivo compose.yaml para o docker
+docker compose -f infra/compose.yaml up
+### instalar cliente postgres para testar conexao com o container docker postgres de forma independente do app node
+brew install libpq
+docker compose -f infra/compose.yaml up --detach --force-recreate 

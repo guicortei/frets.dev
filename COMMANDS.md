@@ -22,7 +22,7 @@ Inicializa o `package.json` (se ainda não existir), instala o runtime do Next/R
 ```bash
 npm init
 npm install next react react-dom
-npm install --save-dev prettier vitest
+npm install --save-dev prettier jest @swc/jest @swc/core dotenv
 ```
 
 ---
@@ -69,11 +69,13 @@ Indica **qual versão do Node** o projeto espera (aqui: `lts/krypton`). Com o nv
 
 ### `jsconfig.json`
 
-Configuração do **JavaScript no editor** (e de ferramentas que a respeitam): neste repo define `baseUrl: "."` para imports a partir da raiz. É o lugar onde, se quiser, se adicionam **`paths`** (por exemplo `@/*`) para atalhos de import — o Next costuma documentar isso junto com o alias `@/`.
+Configuração do **JavaScript no editor** e do **Next.js**: `baseUrl: "."` e **`paths`** com `@/*` apontando para a raiz do projeto — imports como `@/infra/database.js`. O **Jest** repete só essa mesma regra em `moduleNameMapper` (não dá para ler `jsconfig` automaticamente).
 
-### `vitest.config.mjs`
+### `jest.config.cjs`
 
-Configura o **Vitest** (testes): padrão de arquivos `tests/**/*.test.js`, ambiente Node, timeout, dependência `pg` tratada no bundler de testes, e carregamento de variáveis de ambiente com `loadEnv("development", …)`. Por isso os testes usam o **mesmo modo “development”** que o Vite/Next associam ao desenvolvimento local — incluindo o arquivo **`.env.development`** (além de `.env` e `.env.local`, conforme a [ordem do Vite](https://vitejs.dev/guide/env-and-mode.html)).
+Configura o **Jest**: arquivos `tests/**/*.test.js`, ambiente Node, timeout, **`@swc/jest`** para aceitar `import`/`export` nos testes sem Babel, e **`moduleNameMapper`** com uma única regra `^@/(.*)$` — o mesmo alias **`@/*`** definido em **`jsconfig.json`** (`paths`), para não manter imports duplicados por ferramenta.
+
+No topo do arquivo, **`dotenv`** carrega **`.env`** e **`.env.development`**, para `process.env` nos testes bater com o Compose e com o app em desenvolvimento (sem `setupFilesAfterEnv` só para isso).
 
 ### `.editorconfig`
 
@@ -86,7 +88,7 @@ Arquivo de variáveis para o modo **`development`**. O sufixo **`.development`**
 Neste projeto, o mesmo conjunto de valores usado no app em dev também é referenciado por:
 
 - **`infra/compose.yaml`** — o serviço Postgres usa `env_file: ../.env.development`, ou seja, as credenciais/porta do container vêm desse arquivo na raiz.
-- **`vitest.config.mjs`** — `loadEnv("development", …)` faz o Vitest injetar no processo de teste as variáveis desse modo (incluindo `.env.development`), alinhando testes de integração que usam `infra/database.js` com o que você usa no dia a dia.
+- **`jest.config.cjs`** (bloco inicial com `dotenv`) — o mesmo carregamento de `.env` / `.env.development` para a suíte de testes.
 
 **Boas práticas:** não commite segredos reais; use `.env.example` como modelo e mantenha arquivos sensíveis fora do Git se necessário. Em CI, prefira **secrets** e `env:` no workflow em vez de depender de um `.env` no repositório.
 

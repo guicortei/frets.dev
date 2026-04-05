@@ -19,16 +19,20 @@
     "services:down": "docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "jest",
+    "test:watch": "jest --watchAll --runInBand",
+    "migration:create": "node-pg-migrate --migrations-dir infra/migrations create",
+    "migration:up": "node-pg-migrate --migrations-dir infra/migrations --envPath .env.development up"
   },
   "dependencies": {
     "baseline-browser-mapping": "^2.10.8",
     "caniuse-lite": "^1.0.30001779",
     "client-only": "^0.0.1",
     "detect-libc": "^2.1.2",
+    "dotenv-expand": "^12.0.3",
     "nanoid": "^3.3.11",
     "next": "^16.1.6",
+    "node-pg-migrate": "^8.0.4",
     "pg": "^8.20.0",
     "picocolors": "^1.1.1",
     "postcss": "^8.4.31",
@@ -42,7 +46,10 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "prettier": "^3.8.1",
-    "vitest": "^3.2.4"
+    "@swc/core": "^1.11.11",
+    "@swc/jest": "^0.2.39",
+    "dotenv": "^16.4.7",
+    "jest": "^30.3.0",
+    "prettier": "^3.8.1"
   }
 }
